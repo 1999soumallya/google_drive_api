@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-import { Container, Nav, Navbar, NavbarBrand } from 'react-bootstrap';
+import { Button, Container, Nav, Navbar, NavbarBrand } from 'react-bootstrap';
 
 export default function DefaultNavbar({ isLoggedIn, signOut }) {
     const CreateGoogleAuthLink = async () => {
@@ -34,9 +34,6 @@ export default function DefaultNavbar({ isLoggedIn, signOut }) {
                                         <Nav.Item>
                                             <Nav.Link href="/about">Get about My Drive</Nav.Link>
                                         </Nav.Item>
-                                        <Nav.Item>
-                                            <Nav.Link href="#" onClick={signOut}>Sign Out</Nav.Link>
-                                        </Nav.Item>
                                     </>
                                 ) : (
                                     <Nav.Item>
@@ -45,6 +42,13 @@ export default function DefaultNavbar({ isLoggedIn, signOut }) {
                                 )
                             }
                         </Nav>
+                        {
+                            isLoggedIn && (
+                                <Nav.Item>
+                                    <Button variant="dark" onClick={signOut}> Sign Out </Button>
+                                </Nav.Item>
+                            )
+                        }
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

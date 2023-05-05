@@ -1,18 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap'
-import { childrenFiles, deleteMyDriveFile, downloadMyDriveFile, getMyDriveFileList } from '../Functions/GetDriveDetails'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Link } from "react-router-dom"
+import { childrenFiles, deleteMyDriveFile, downloadMyDriveFile } from '../Functions/GetDriveDetails'
+import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap'
 
-export default function FileList() {
+export default function ChildDisplay() {
 
+    const [Loading, setLoading] = useState(false)
     const [FolderArray, setFolderArray] = useState([])
     const [FileArray, setFileArray] = useState([])
-    const [Loading, setLoading] = useState(false)
+
+    let { folder_id } = useParams()
 
     const GetDriveFiles = useCallback(() => {
         setLoading(true)
-        getMyDriveFileList().then((data) => {
+        childrenFiles(folder_id).then((data) => {
             if (data.folder.items.length > 0) {
                 setFolderArray(data.folder.items)
             } else {
@@ -30,7 +32,7 @@ export default function FileList() {
             setLoading(false)
             toast.error(error, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "colored", });
         })
-    }, [])
+    }, [folder_id])
 
     const DeleteFiles = (id) => {
         if (window.confirm("Are you seoure to delete this file")) {

@@ -80,3 +80,23 @@ export const downloadMyDriveFile = async (fileId) => {
         return error.message;
     }
 }
+
+export const childrenFiles = async (folderId) => {
+    try {
+        return new Promise((resolve, reject) => {
+            getToken().then(async (token) => {
+                if (token) {
+                    await axios.get(`http://localhost:3001/children?token=${JSON.stringify(token)}&folderId=${folderId}`).then((data) => {
+                        resolve(data.data)
+                    }).catch((error) => {
+                        reject(error.response.data.message)
+                    })
+                }
+            }).catch((error) => {
+                reject(error.message)
+            })
+        })
+    } catch (error) {
+        return error.message;
+    }
+}
