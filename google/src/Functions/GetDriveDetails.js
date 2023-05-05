@@ -21,12 +21,18 @@ export const getMyDriveDetails = async () => {
     }
 };
 
-export const getMyDriveFileList = async () => {
+export const getMyDriveFileList = async (folderId = "") => {
     try {
+        let query
         return new Promise((resolve, reject) => {
             getToken().then(async (token) => {
                 if (token) {
-                    await axios.get(`${process.env.REACT_APP_API_URL}/files?token=${JSON.stringify(token)}`).then((data) => {
+                    if (folderId !== "") {
+                        query = `token=${JSON.stringify(token)}&folderId=${folderId}`
+                    } else {
+                        query = `token=${JSON.stringify(token)}`
+                    }
+                    await axios.get(`${process.env.REACT_APP_API_URL}/files?${query}`).then((data) => {
                         resolve(data.data)
                     }).catch((error) => {
                         reject(error.response.data.message)
@@ -68,26 +74,6 @@ export const downloadMyDriveFile = async (fileId) => {
                 if (token) {
                     fetch(`${process.env.REACT_APP_API_URL}/folder/?token=${JSON.stringify(token)}&fileId=${fileId}`, { method: "GET" }).then((data) => {
                         resolve(data.blob())
-                    }).catch((error) => {
-                        reject(error.response.data.message)
-                    })
-                }
-            }).catch((error) => {
-                reject(error.message)
-            })
-        })
-    } catch (error) {
-        return error.message;
-    }
-}
-
-export const childrenFiles = async (folderId) => {
-    try {
-        return new Promise((resolve, reject) => {
-            getToken().then(async (token) => {
-                if (token) {
-                    await axios.get(`${process.env.REACT_APP_API_URL}/children?token=${JSON.stringify(token)}&folderId=${folderId}`).then((data) => {
-                        resolve(data.data)
                     }).catch((error) => {
                         reject(error.response.data.message)
                     })

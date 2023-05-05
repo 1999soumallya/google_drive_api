@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { childrenFiles, deleteMyDriveFile, downloadMyDriveFile } from '../Functions/GetDriveDetails'
+import { deleteMyDriveFile, downloadMyDriveFile, getMyDriveFileList } from '../Functions/GetDriveDetails'
 import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap'
 
 export default function ChildDisplay() {
@@ -14,7 +14,7 @@ export default function ChildDisplay() {
 
     const GetDriveFiles = useCallback(() => {
         setLoading(true)
-        childrenFiles(folder_id).then((data) => {
+        getMyDriveFileList(folder_id).then((data) => {
             if (data.folder.items.length > 0) {
                 setFolderArray(data.folder.items)
             } else {
