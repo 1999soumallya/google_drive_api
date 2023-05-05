@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getMyDriveDetails } from '../Functions/GetDriveDetails'
 import { toast } from 'react-toastify';
 import { Spinner } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export default function About() {
     const [Loading, setLoading] = useState(false)
@@ -30,10 +31,10 @@ export default function About() {
                                     <nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
                                         <ol className="breadcrumb mb-0">
                                             <li className="breadcrumb-item">
-                                                <a href="#">Home</a>
+                                                <Link to="/">Home</Link>
                                             </li>
                                             <li className="breadcrumb-item">
-                                                <a href="#">User</a>
+                                                <Link to="#">User</Link>
                                             </li>
                                             <li className="breadcrumb-item active" aria-current="page">
                                                 User Profile

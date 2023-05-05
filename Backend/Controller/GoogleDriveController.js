@@ -223,8 +223,8 @@ const GetChildrenOfAFile = expressAsyncHandler(async (req, res) => {
         oauth2Client.setCredentials({ access_token: token.accessToken, refresh_token: token.refreshToken });
         const driveClient = google.drive({ version: 'v2', auth: oauth2Client })
 
-        await driveClient.children.list({ folderId: folderId, q: "mimeType = 'application/vnd.google-apps.folder'" }).then(async (folder) => {
-            await driveClient.children.list({ folderId: folderId, q: "mimeType != 'application/vnd.google-apps.folder'" }).then((files) => {
+        await driveClient.files.list({ folderId: folderId, q: `mimeType = 'application/vnd.google-apps.folder' and '${folderId}' in parents` }).then(async (folder) => {
+            await driveClient.files.list({ folderId: folderId, q: `mimeType != 'application/vnd.google-apps.folder' and '${folderId}' in parents` }).then((files) => {
                 res.status(200).json({ message: "Get all the files form a folder success", success: true, folder: folder.data, files: files.data })
             }).catch((error) => {
                 console.log(error);
