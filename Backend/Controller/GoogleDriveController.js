@@ -83,8 +83,14 @@ const GetAllFilesFromMyDrive = expressAsyncHandler(async (req, res) => {
         oauth2Client.setCredentials({ access_token: token.accessToken, refresh_token: token.refreshToken });
         const driveClient = google.drive({ version: 'v2', auth: oauth2Client })
 
-        await driveClient.files.list().then((files) => {
-            res.status(200).json({ message: "Get all the files success", success: true, files: files.data })
+        await driveClient.files.list({ orderBy: ["folder", "title"] }).then(async (folder) => {
+            await driveClient.files.list({ orderBy: ["title"] }).then((files) => {
+                files.data.items = files.data.items.filter(item => !folder.data.items.includes(item))
+                res.status(200).json({ message: "Get all the files success", success: true, folder: folder.data, files: files.data })
+            }).catch((error) => {
+                console.log(error);
+                res.status(400).json({ message: "Get all the files failed", success: false, error: error })
+            })
         }).catch((error) => {
             console.log(error);
             res.status(400).json({ message: "Get all the files failed", success: false, error: error })

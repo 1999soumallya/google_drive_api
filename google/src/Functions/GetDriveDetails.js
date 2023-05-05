@@ -27,7 +27,7 @@ export const getMyDriveFileList = async () => {
             getToken().then(async (token) => {
                 if (token) {
                     await axios.get(`http://localhost:3001/files?token=${JSON.stringify(token)}`).then((data) => {
-                        resolve(data.data.files.items)
+                        resolve(data.data)
                     }).catch((error) => {
                         reject(error.response.data.message)
                     })

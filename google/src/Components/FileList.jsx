@@ -5,18 +5,28 @@ import { toast } from 'react-toastify'
 
 export default function FileList() {
 
-    const [DetaArray, setDetaArray] = useState([])
+    const [FolderArray, setFolderArray] = useState([])
+    const [FileArray, setFileArray] = useState([])
     const [Loading, setLoading] = useState(false)
 
     const GetDriveFiles = () => {
         setLoading(true)
         getMyDriveFileList().then((data) => {
-            if (data.length > 0) {
-                setLoading(false)
-                setDetaArray(data)
+            if (data.folder.items.length > 0) {
+                setFolderArray(data.folder.items)
             } else {
-                setDetaArray([])
+                setFolderArray([])
             }
+
+            if (data.files.items.length > 0) {
+                setFileArray(data.files.items)
+            } else {
+                setFileArray([])
+            }
+
+            setLoading(false)
+            console.log(FolderArray);
+            console.log(FileArray);
         }).catch((error) => {
             setLoading(false)
             toast.error(error, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "colored", });
@@ -58,30 +68,45 @@ export default function FileList() {
             <Container className="pt-4">
                 <Row>
                     {
-                        Loading ?
-                            (<Spinner animation="grow" variant="success" />)
-                            : (DetaArray.length > 0) ? DetaArray.map((items) => (
-                                <Col md={3} className="mb-2" key={items.id}>
-                                    <Card style={{ width: '18rem' }}>
-                                        <Card.Img variant="top" src={items.thumbnailLink} height={150} style={{ objectFit: "contain" }} />
-                                        <Card.Body>
-                                            <Card.Title>{items.originalFilename}</Card.Title>
-                                            {/* id selfLink */}
-                                            <div className="d-flex justify-content-between">
-                                                <Button variant="primary" onClick={() => DownloadFiles(items.id, items.originalFilename)}><i className="fa-solid fa-download"></i></Button>
-                                                <Button variant="danger" onClick={() => DeleteFiles(items.id)}><i className="fa-regular fa-trash-can"></i></Button>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            )) : (
-                                <Col md={12}>
-                                    <Alert key={"info"} variant={"info"}>
-                                        No deta Found
-                                    </Alert>
-                                </Col>
-                            )
+                        Loading ? (<Spinner animation="grow" variant="success" />) : (FolderArray.length === 0 && FileArray.length === 0) && (
+                            <Col md={12}>
+                                <Alert key={"info"} variant={"info"}>
+                                    No deta Found
+                                </Alert>
+                            </Col>
+                        )
                     }
+                    <Col md={12}>
+                        <Row>
+                            {
+                                !Loading && (FolderArray.length > 0) && FolderArray.map((items) => (
+                                    <Col md={2} className="mb-2">
+                                        <Button variant="secondary" className="d-flex justify-content-left align-items-center" style={{ "minWidth": "100%", "gap": "10px", "maxWidth": "100%", "overflow": "hidden" }} ><i class="fa-solid fa-folder"></i> <p className="p-0 m-0" style={{ "whiteSpace": "nowrap" }}>{items.title}</p> </Button>
+                                    </Col>
+                                ))
+                            }
+                        </Row>
+                    </Col>
+                    <Col md={12}>
+                        <Row>
+                            {
+                                !Loading && (FileArray.length > 0) && FileArray.map((item) => (
+                                    <Col md={3} className="mb-2" key={item.id}>
+                                        <Card style={{ width: '18rem' }}>
+                                            <Card.Img variant="top" src={item.thumbnailLink} height={150} style={{ objectFit: "contain" }} />
+                                            <Card.Body>
+                                                <Card.Title>{item.originalFilename}</Card.Title>
+                                                <div className="d-flex justify-content-between">
+                                                    <Button variant="primary" onClick={() => DownloadFiles(item.id, item.originalFilename)}><i className="fa-solid fa-download"></i></Button>
+                                                    <Button variant="danger" onClick={() => DeleteFiles(item.id)}><i className="fa-regular fa-trash-can"></i></Button>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))
+                            }
+                        </Row>
+                    </Col>
                 </Row>
             </Container>
         </>
