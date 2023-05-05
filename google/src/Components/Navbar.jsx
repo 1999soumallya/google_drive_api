@@ -29,10 +29,10 @@ export default function DefaultNavbar({ isLoggedIn, signOut }) {
                                 isLoggedIn ? (
                                     <>
                                         <Nav.Item>
-                                            <Nav.Link active aria-current="page" href="#">Get about my drive</Nav.Link>
+                                            <Nav.Link active aria-current="page" href="/">Get all Files from drive</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
-                                            <Nav.Link href="#">Get about Files</Nav.Link>
+                                            <Nav.Link href="/about">Get about My Drive</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link href="#" onClick={signOut}>Sign Out</Nav.Link>

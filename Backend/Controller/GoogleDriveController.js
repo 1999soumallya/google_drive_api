@@ -56,14 +56,20 @@ const getValidToken = expressAsyncHandler(async (req, res) => {
 
 const GetAboutMyDrive = expressAsyncHandler(async (req, res) => {
     try {
-        const { token } = req.body
+        let { token } = req.query
 
-        await axios.request(Constants.GoogleApiLists.ABOUT_DRIVE, { headers: { Authorization: `Bearer ${token}`, }, }).then((data) => {
+        token = JSON.parse(token)
+
+        oauth2Client.setCredentials({ access_token: token.accessToken, refresh_token: token.refreshToken });
+        const driveClient = google.drive({ version: 'v2', auth: oauth2Client })
+
+        driveClient.about.get().then((data) => {
             res.status(200).json({ message: "Fetch drive details success", success: true, data: data.data })
         }).catch((error) => {
             res.status(400).json({ message: "Fetch drive details failed", success: false, error: error })
         })
     } catch (error) {
+        console.log(error);
         res.status(400).json({ message: "Something is wrong!", success: false, error: error })
     }
 })

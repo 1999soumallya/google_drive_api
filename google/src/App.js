@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import DefaultNavbar from './Components/Navbar';
 import FileList from './Components/FileList';
 import { ToastContainer } from 'react-toastify';
+import About from './Components/About';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
       <DefaultNavbar isLoggedIn={isLoggedIn} signOut={signOut} />
       <Routes>
         <Route index element={<FileList />} />
+        <Route path='/about' element={<About />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClickrtl={false} pauseOnFocusLossdraggablepauseOnHovertheme="colored" />
     </>

@@ -8,7 +8,7 @@ Router.route("/handlegoogleredirect").get(handlegoogleredirect)
 
 Router.route("/getValidToken").post(getValidToken)
 
-Router.route("/").post(GetAboutMyDrive)
+Router.route("/").get(GetAboutMyDrive)
 
 Router.route("/files").get(GetAllFilesFromMyDrive).delete(DeleteFileFromMyDrive).put(UpdateMyDriveFile).post(CreateFileOnDrive)
 
