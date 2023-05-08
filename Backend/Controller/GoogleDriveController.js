@@ -221,4 +221,50 @@ const DownloadFileFromDrive = expressAsyncHandler(async (req, res) => {
     }
 })
 
-module.exports = { createauthlink, handlegoogleredirect, getValidToken, GetAboutMyDrive, GetAllFilesFromMyDrive, DeleteFileFromMyDrive, UpdateMyDriveFile, CreateFileOnDrive, CreateFloderInMyDrive, DownloadFileFromDrive }
+const LabelModification = expressAsyncHandler(async (req, res) => {
+    try {
+
+        let { file_id, token, lableType, fieldValue } = req.body
+
+        // token = JSON.parse(token)
+
+        oauth2Client.setCredentials({ access_token: req.body.accessToken, refresh_token: req.body.refreshToken });
+        const driveClient = google.drive({ version: 'v2', auth: oauth2Client })
+
+        const labelModificationRequest = {
+            "labelModifications": [
+                {
+                    "labelId": `${lableType}`,
+                    "kind": "drive#labelModification",
+                    "fieldModifications": [
+                        {
+                            "fieldId": "filetype",
+                            "kind": "drive#labelFieldModification",
+                            "setTextValues": [`${fieldValue}`]
+                        }
+                    ],
+                    "removeLabel": false
+                }
+            ],
+            "kind": "drive#modifyLabelsRequest"
+        }
+
+        await driveClient.files.get({ fileId: file_id, fields: "id, labels" }).then(async (filedetails) => {
+            // await axios.post(Constants.GoogleApiList.MODIFY_lABELS(file_id), labelModificationRequest, { headers: { Authorization: `Bearer ${req.body.accessToken}` } }).then((filedetails) => {
+            //     res.status(200).json({ message: "File label successfully modified", success: true, files: filedetails.data })
+            // }).catch((error) => {
+            //     console.log(error);
+            //     res.status(400).json({ message: "File label modification failed", success: false, error: error })
+            // })
+            res.status(200).json({ message: "File label successfully modified", success: true, files: filedetails.data })
+        }).catch((error) => {
+            res.status(400).json({ message: "Getting file failed", success: false, error: error })
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: "Something is wrong!", success: false, error: error })
+    }
+})
+
+module.exports = { createauthlink, handlegoogleredirect, getValidToken, GetAboutMyDrive, GetAllFilesFromMyDrive, DeleteFileFromMyDrive, UpdateMyDriveFile, CreateFileOnDrive, CreateFloderInMyDrive, DownloadFileFromDrive, LabelModification }

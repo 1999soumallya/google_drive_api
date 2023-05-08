@@ -11,6 +11,8 @@ export const getMyDriveDetails = async () => {
                     }).catch((error) => {
                         reject(error.response.data);
                     })
+                } else {
+                    reject("Please login your account")
                 }
             }).catch((error) => {
                 reject(error.message);
@@ -37,6 +39,8 @@ export const getMyDriveFileList = async (folderId = "") => {
                     }).catch((error) => {
                         reject(error.response.data.message)
                     })
+                } else {
+                    reject("Please login your account")
                 }
             }).catch((error) => {
                 reject(error.message)
@@ -57,6 +61,8 @@ export const deleteMyDriveFile = async (fileId) => {
                     }).catch((error) => {
                         reject(error.response.data.message)
                     })
+                } else {
+                    reject("Please login your account")
                 }
             }).catch((error) => {
                 reject(error.message)
@@ -77,6 +83,8 @@ export const downloadMyDriveFile = async (fileId) => {
                     }).catch((error) => {
                         reject(error.response.data.message)
                     })
+                } else {
+                    reject("Please login your account")
                 }
             }).catch((error) => {
                 reject(error.message)

@@ -14,8 +14,8 @@ export const getToken = async () => {
         sessionStorage.setItem("expirationDate", newExpirationDate());
         return token;
     } else {
-        const token = { accessToken: sessionStorage.getItem("accessToken"), refreshToken: sessionStorage.getItem("refreshToken") }
-        return token;
+        // const token = { accessToken: sessionStorage.getItem("accessToken"), refreshToken: sessionStorage.getItem("refreshToken") }
+        return
     }
 };
 
@@ -29,7 +29,7 @@ const tokenExpired = () => {
     const now = Date.now();
     const expirationDate = sessionStorage.getItem("expirationDate");
     const expDate = new Date(expirationDate);
-    if (now > expDate.getTime()) {
+    if (expirationDate && now > expDate.getTime()) {
         return true;
     }
     return false;
@@ -37,7 +37,7 @@ const tokenExpired = () => {
 
 const getValidTokenFromServer = async (refreshToken) => {
     try {
-        await axios.post("http://localhost:3001/getValidToken", { refreshToken: JSON.stringify(refreshToken) }, { headers: { "Content-Type": "application/json" } }).then((response) => {
+        await axios.post(`${process.env.REACT_APP_API_URL}/getValidToken`, { refreshToken: JSON.stringify(refreshToken) }, { headers: { "Content-Type": "application/json" } }).then((response) => {
             if (response) {
                 return response.data
             }
